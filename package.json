@@ -1,0 +1,9 @@
+{
+  "name": "LolSkin",
+  "version": "1.0.0",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.10",
+    "progress-stream": "^2.0.0",
+    "request": "^2.88.2"
+  }
+}
