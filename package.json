@@ -1,10 +1,14 @@
 {
   "name": "LolSkin",
-  "version": "1.0.0",
+  "version": "1.5.0",
+  "author": "C",
+  "url": "https://github.com/scripted-C20",
+  "email": "1316382961@qq.com",
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
+    "inquirer": "^8.0.0",
+    "node-fetch": "^2.6.7",
     "progress-stream": "^2.0.0",
-    "request": "^2.88.2",
-    "node-fetch": "^2.6.7"
+    "request": "^2.88.2"
   }
 }

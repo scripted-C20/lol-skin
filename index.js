@@ -1,39 +1,58 @@
 const request = require('request');
 const cheerio = require('cheerio');
-const readline = require('readline');
 const fetch = require('node-fetch');
-const progressStream = require('progress-stream')
+const progressStream = require('progress-stream');
+const inquirer = require('inquirer');
 
 const fs = require('fs')
 
-let r1 = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout
-})
+const questions = ['下载最新/start?', '清除缓存/clear?','退出/quit?'];
 
 const url = 'http://leagueskin.net/p/download-mod-skin-2020-chn';
 
 //是否下载
-function setOutput() {
-    //调用接口方法
-    r1.question("是否下载?Y/N\t", async function (answer) {
-        if (answer === 'Y' || answer === 'yes' || answer === 'y') {
-            console.log("执行了")
-            await getRef().then(async (res) => {
-                await fsDem(res);
-
-            })
+function setOutput(title) {
+    inquirer.prompt({
+        name: "choose",
+        type: "list",
+        message: title,
+        choices: questions,
+        default: "exit",
+    }).then(async (res) => {
+        const { choose } = res;
+        switch (choose) {
+            case '下载最新/start?':
+             const res =  await getRef();
+             await fsDem(res);
+                break;
+            case '清除缓存/clear?':
+              await  clearCache();
+              console.log('清除成功');
+              await  sleep();
+              break;
+            case '退出/quit?':
+                await sleep();
+                break;
         }
-
-        // 不加close，则不会结束
-        r1.close();
     })
+}
 
-//close事件监听
-    r1.on("close", function () {
-        // 结束程序
-        process.exit(0);
-    })
+let paths = 'C:\\Fraps\\';//设置删除路径
+//清除缓存文件
+function clearCache( path) {
+    let files = [];
+    if (fs.existsSync(path)) {
+        files = fs.readdirSync(path);
+        files.forEach(( file, index ) => {
+            let curPath = path + "/" + file;
+            if (fs.statSync(curPath).isDirectory()) {
+                clearCache(curPath); //递归删除文件夹
+            } else {
+                fs.unlinkSync(curPath); //删除文件
+            }
+        });
+        fs.rmdirSync(path);
+    }
 }
 
 //下载
@@ -43,14 +62,14 @@ async function fsDem(url) {
         method: 'GET',
         headers: {'Content-Type': 'application/octet-stream'},
     }).then(async res => {
-
         const fileStream = fs.createWriteStream(url.substring(url.lastIndexOf('/') + 1)
         ).on('error', function (e) {
             console.error('错误', e)
         }).on('ready', function () {
             console.log("开始下载:");
-        }).on('finish', function () {
-            console.log('文件下载完成:');
+        }).on('finish', async function () {
+            console.log('文件下载完成');
+           await sleep()
         });
 
         let length = res.headers.get("content-length");
@@ -66,7 +85,6 @@ async function fsDem(url) {
         });
 
         res.body.pipe(str).pipe(fileStream);
-
         while (prog < 100) {
             await new Promise(resolve => setTimeout(() => resolve(), 200));
         }
@@ -85,12 +103,11 @@ function getRef() {
     })
 
 }
-
+//初始化的版本号
 let version = '0.0'
-
 try {
     fs.readdir('C:\\Fraps\\', async (err, req) => {
-        await getRef().then(res => {
+        await getRef().then(async (res) => {
             let newArr = res.split('/')[3].split('.').slice(0, -1);
             newArr[0] = newArr[0].split('_')[1];
             let newVi = JSON.stringify(newArr.join('.'));
@@ -98,11 +115,12 @@ try {
             else version = JSON.stringify(req[1].split(' ')[1].split('.').slice(0, -1).join('.'))
 
             if (compareVersion(version, newVi) === -1) {
-                console.log(`检查更新：当前版本${version},现在版本${newVi}`)
-                setOutput()
+                // console.log()
+                setOutput(`检查更新：当前版本${ version },现在版本${ newVi }`)
             } else if (compareVersion(version, newVi) === 0) {
-                console.log(`检查更新：当前版本${version},现在版本${newVi},当前最新版本`);
-                return process.exit(0)
+                console.log(`检查更新：当前版本${ version },现在版本${ newVi },当前最新版本`);
+                await sleep();
+                return process.exit(0);
             }
         })
 
@@ -111,6 +129,19 @@ try {
 } catch (e) {
     console.log(e)
 }
+
+//退出
+async function sleep(ms= 1000,num= 5) {
+    if(num == 5)  console.log('5秒后自动退出');
+    if(num > 0){
+        await setTimeout(async function () {
+            await console.log(num);
+            num--;
+            await sleep(ms,num);
+        }, ms)
+    }
+}
+
 
 //比较版本号
 function compareVersion(v1, v2) {
