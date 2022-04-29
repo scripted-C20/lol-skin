@@ -106,10 +106,12 @@ try {
             if (version === newVi) {
                 console.log(`检查更新：当前版本${version},现在版本${newVi},当前最新版本`);
                 return process.exit(0)
-            } else {
+            }
+            if (version > '0.0' && version !== newVi) {
                 console.log(`检查更新：当前版本${version},现在版本${newVi}`);
                 setOutput();
             }
+
         })
 
 
