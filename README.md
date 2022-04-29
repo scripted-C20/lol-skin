@@ -14,7 +14,7 @@
  
  下载到当前目录
 
-## 实现技术
+## 实现
 
 node | cheerio | no-fetch | request
 
