@@ -1,7 +1,7 @@
 const request = require('request');
 const cheerio = require('cheerio');
 const readline = require('readline');
-const fetch = require('./js/index');
+const fetch = require('node-fetch');
 const progressStream = require('progress-stream')
 
 const fs = require('fs')
@@ -29,7 +29,7 @@ function setOutput() {
         r1.close();
     })
 
-    //close事件监听
+//close事件监听
     r1.on("close", function () {
         // 结束程序
         process.exit(0);
@@ -41,12 +41,11 @@ async function fsDem(url) {
     console.log(url)
     await fetch(url, {
         method: 'GET',
-        headers: {
-            'Content-Type': 'application/octet-stream'
-        },
+        headers: {'Content-Type': 'application/octet-stream'},
     }).then(async res => {
 
-        const fileStream = fs.createWriteStream(url.substring(url.lastIndexOf('/') + 1)).on('error', function (e) {
+        const fileStream = fs.createWriteStream(url.substring(url.lastIndexOf('/') + 1)
+        ).on('error', function (e) {
             console.error('错误', e)
         }).on('ready', function () {
             console.log("开始下载:");
@@ -56,8 +55,7 @@ async function fsDem(url) {
 
         let length = res.headers.get("content-length");
         let str = progressStream({
-            length,
-            time: 100
+            length, time: 100
         });
 
         let prog = 0;
@@ -99,19 +97,13 @@ try {
             if (req == null) version = '0.0'
             else version = JSON.stringify(req[1].split(' ')[1].split('.').slice(0, -1).join('.'))
 
-            if (version === '0.0') {
+            if (compareVersion(version, newVi) === -1) {
                 console.log(`检查更新：当前版本${version},现在版本${newVi}`)
                 setOutput()
-            }
-            if (version === newVi) {
+            } else if (compareVersion(version, newVi) === 0) {
                 console.log(`检查更新：当前版本${version},现在版本${newVi},当前最新版本`);
                 return process.exit(0)
             }
-            if (version > '0.0' && version !== newVi) {
-                console.log(`检查更新：当前版本${version},现在版本${newVi}`);
-                setOutput();
-            }
-
         })
 
 
@@ -119,3 +111,36 @@ try {
 } catch (e) {
     console.log(e)
 }
+
+//比较版本号
+function compareVersion(v1, v2) {
+    v1 = v1.split('.')
+    v2 = v2.split('.')
+    const len = Math.max(v1.length, v2.length)
+
+    // 调整两个版本号位数相同
+    while (v1.length < len) {
+        v1.push('0')
+    }
+    while (v2.length < len) {
+        v2.push('0')
+    }
+
+    // 循环判断每位数的大小
+    for (let i = 0; i < len; i++) {
+        const num1 = parseInt(v1[i])
+        const num2 = parseInt(v2[i])
+
+        if (num1 > num2) {
+            return 1
+        } else if (num1 < num2) {
+            return -1
+        }
+    }
+
+    return 0
+}
+
+
+
+

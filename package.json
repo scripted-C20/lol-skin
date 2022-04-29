@@ -4,6 +4,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.10",
     "progress-stream": "^2.0.0",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "node-fetch": "^2.6.7"
   }
 }
