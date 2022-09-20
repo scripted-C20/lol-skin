@@ -26,7 +26,7 @@ function setOutput(title) {
              await fsDem(res);
                 break;
             case '清除缓存/clear?':
-              await  clearCache();
+              await rmDir('C:/Fraps/');
               console.log('清除成功');
               await  sleep();
               break;
@@ -37,22 +37,25 @@ function setOutput(title) {
     })
 }
 
-let paths = 'C:\\Fraps\\';//设置删除路径
 //清除缓存文件
-function clearCache( path) {
-    let files = [];
-    if (fs.existsSync(path)) {
-        files = fs.readdirSync(path);
-        files.forEach(( file, index ) => {
-            let curPath = path + "/" + file;
-            if (fs.statSync(curPath).isDirectory()) {
-                clearCache(curPath); //递归删除文件夹
-            } else {
-                fs.unlinkSync(curPath); //删除文件
-            }
-        });
-        fs.rmdirSync(path);
-    }
+function rmDir( path ) {
+    new Promise(async ( resolve ) => {
+        if (fs.existsSync(path)) {
+            const dirs = [];
+            const files = await fs.readdirSync(path);
+            files.forEach(async ( file ) => {
+                const childPath = path + "/" + file;
+                if (fs.statSync(childPath).isDirectory()) {
+                    await rmDir(childPath);
+                    dirs.push(childPath);
+                } else {
+                    await fs.unlinkSync(childPath);
+                }
+            });
+            dirs.forEach(( fir ) => fs.rmdirSync(fir));
+            resolve();
+        }
+    });
 }
 
 //下载
@@ -111,17 +114,10 @@ try {
             let newArr = res.split('/')[3].split('.').slice(0, -1);
             newArr[0] = newArr[0].split('_')[1];
             let newVi = JSON.stringify(newArr.join('.'));
-            if (req == null) version = '0.0'
-            else version = JSON.stringify(req[1].split(' ')[1].split('.').slice(0, -1).join('.'))
+            if (req == null ||  req.length<=1) version = '0.0';
+            else version = JSON.stringify(req[1].split(' ')[1].split('.').slice(0, -1).join('.'));
+            setOutput(`检查更新：当前版本${ version },现在版本${ newVi }`)
 
-            if (compareVersion(version, newVi) === -1) {
-                // console.log()
-                setOutput(`检查更新：当前版本${ version },现在版本${ newVi }`)
-            } else if (compareVersion(version, newVi) === 0) {
-                console.log(`检查更新：当前版本${ version },现在版本${ newVi },当前最新版本`);
-                await sleep();
-                return process.exit(0);
-            }
         })
 
 

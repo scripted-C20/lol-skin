@@ -21,5 +21,6 @@
 
 ## 运行效果
 
-![test](https://github.com/scripted-C20/lol-skin/blob/main/start.jpg)
+<img src="./start.jpg">
+
 
