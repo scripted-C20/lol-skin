@@ -7,19 +7,19 @@
 
 ### 1.5
 
-Row reads are discarded, He chose the better Inquirer(<https://github.com/SBoudrias/Inquirer.js>)
+Row reads are discarded, He chose the better [Inquirer](https://github.com/SBoudrias/Inquirer.js)
 
 Added cache clearing for modifiers
 
 ## describe
 
-From the skin(<http://leagueskin.net/p/download-mod-skin-2020-chn>) The modifier
+From the [skin](http://leagueskin.net/p/download-mod-skin-2020-chn) The modifier
 
-Automatically detects the latest version and displays 0.0 when modifiers are not open
+Automatically detects the latest version and displays 0.0 when the modifier is not open
 
 Download to the current directory
 
 ## Running effect
 
-![test](./start.jpg)
+![test](https://github.com/scripted-C20/lol-skin/blob/main/start.jpg)
 
