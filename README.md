@@ -21,5 +21,5 @@ Download to the current directory
 
 ## Running effect
 
-![test](https://github.com/scripted-C20/lol-skin/blob/main/start.jpg)
+<img src="./start.jpg">
 
