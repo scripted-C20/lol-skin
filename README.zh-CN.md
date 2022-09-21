@@ -5,6 +5,10 @@
 
 ## 更新
 
+### 1.6
+
+修复清除缓存功能和闪退
+
 ### 1.5
 
 舍弃了行读取，选择了更好的[Inquirer](https://github.com/SBoudrias/Inquirer.js)

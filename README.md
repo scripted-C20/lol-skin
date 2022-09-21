@@ -3,7 +3,11 @@
 
 # lol-skin
 
-## renew
+## Renew
+
+### 1.6
+
+Fixed the cache clearing function and flash back
 
 ### 1.5
 
@@ -11,7 +15,7 @@ Row reads are discarded, He chose the better [Inquirer](https://github.com/SBoud
 
 Added cache clearing for modifiers
 
-## describe
+## Describe
 
 From the [skin](http://leagueskin.net/p/download-mod-skin-2020-chn) The modifier
 
