@@ -27,3 +27,4 @@ Download to the current directory
 
 <img src="./start.jpg">
 
+[Buy me a cup of coffee](https://github.com/scripted-C20/sponsor)
